@@ -54,6 +54,7 @@ You now have a choice to make:
 
 - You can define your target audience as _all organizations that have Azure AD_ today (i.e. have a total addressable market of over a billion users across millions of organizations). In this case you can easily create an **Azure AD B2E multi-tenant application** and join the [marketplace with thousands of other SaaS vendors](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/category/azure-active-directory-apps).
 - You can also choose to target any user or organization that does not necessarily have an Azure AD tenant. In that case, it depends on your business model if you want to allow anyone to sign up freely and try out your service, or if you want to restrict your users to only explicitly invited people. In both cases, you probably don't want to see these users as guests in your own Azure AD tenant. **Azure AD B2C** is well suited to handle this scenario, possibly with custom policies to restrict who can sign up for an account.
+- Finally as a combination of both previous methods, you can also use **Azure AD B2C** and configure it to [allow user sign-in for multi-tenant Azure AD tenants](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-commonaad-custom) - with or without the traditional support for self-service sign up and social identity providers.
 
 ### Commerce App
 
