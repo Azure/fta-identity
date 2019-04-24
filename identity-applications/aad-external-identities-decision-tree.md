@@ -2,15 +2,15 @@
 
 ## Introduction
 
-There are a number of flavors of Azure Active Directory (Azure AD or AAD) that allow you to work with "external identities", i.e. users that are outside of your own organization:
+There are a number of flavors of Azure Active Directory (Azure AD) that allow you to work with "external identities", i.e. users that are outside of your own organization:
 
 - [Azure AD](https://docs.microsoft.com/en-us/azure/active-directory/) (sometimes also referred to as Azure AD B2E - Business to Enterprise)
-  - When writing applications for Azure AD B2E, you can target users from a single organization (single tenant), or users from any organization that already has an Azure AD tenant (called [multi-tenant applications](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-convert-app-to-be-multi-tenant)).
+  - When writing applications for Azure AD, you can target users from a single organization (single tenant), or users from any organization that already has an Azure AD tenant (called [multi-tenant applications](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-convert-app-to-be-multi-tenant)).
 - [Azure AD B2B](https://docs.microsoft.com/en-us/azure/active-directory/b2b/) (Business to Business)
-  - This is mainly targeted at collaboration scenarios using Microsoft applications (e.g. Office 365, Microsoft Teams, PowerBI, ...).
-  - In B2B scenarios, you invite external users into your own tenant as "guest" users that you can then assign permissions to (for _authorization_) while allowing them to keep using their existing credentials (for _authentication_) inside their own organization.
+  - This isn't so much a different directory service, it's an extension on top of Azure AD that allows you to work with external identities, mainly for collaboration scenarios using Microsoft applications (e.g. Office 365, Microsoft Teams, PowerBI, ...).
+  - In Azure AD B2B, you invite external users into your own tenant as "guest" users that you can then assign permissions to (for _authorization_) while still allowing them to keep using their existing credentials (for _authentication_) inside their own organization.
 - [Azure AD B2C](https://docs.microsoft.com/en-us/azure/active-directory-b2c/) (Business to Consumer, Customer or even Citizen)
-  - This enables you to customize and control how customers sign up, sign in, and manage their profiles when using your applications.
+  - This is a separate directory service (but still built on top of the global Azure AD infrastructure) which enables you to customize and control how customers sign up, sign in, and manage their profiles when using your applications.
 
 In order to choose the right Azure AD flavor for your project, there are a number of decision factors that come into play. This document provides a decision tree and guidance to help you make the right choice.
 
@@ -27,7 +27,7 @@ Here are some additional considerations for a few of these decision points:
 - _"Is it acceptable to 'see' the users in your own Azure AD tenant (as guests)?"_
   - This is an important decision factor to check if Azure AD B2B is suitable for your scenario because B2B users are represented as [guest users](https://docs.microsoft.com/en-us/azure/active-directory/b2b/user-properties) _inside your own Azure AD tenant_.
   - This has implications around trust and security, e.g. guest users can be browsed in your directory and granted permissions to your resources (e.g. SharePoint documents, Outlook calendars, PowerBI dashboards, even your Azure subscriptions).
-  - Guest users are also typically able to see all users in _your_ directory (which they are now a guest of).
+  - Guest users are also able to get information about users in _your_ directory (which they are now a guest of), and depending on the [permissions you've granted these guest users](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions) they can also browse users and groups, see application definitions and more.
   - This may be exactly what you want in a situation where you trust these users to collaborate with your organization (e.g. business partners or vendors); it may also be something you explicitly want to avoid (e.g. to prevent someone from inadvertently or maliciously granting these guest users permissions to corporate resources or your Azure subscriptions).
   - Think of it this way: _would you invite these users into your physical office building?_ If so, then B2B guest user access may be a great choice.
 - _"Is creating a just-in-time (unmanaged) Azure AD tenant acceptable?"_
@@ -38,7 +38,7 @@ Here are some additional considerations for a few of these decision points:
 
 ### Line-Of-Business (LOB) App
 
-Imagine you are building a Line-Of-Business application to track expenses for the employees of your organization. As the intended audience is _all users of your own organization_, **Azure AD B2E with a single tenant** (i.e. yours) is likely the best choice.
+Imagine you are building a Line-Of-Business application to track expenses for the employees of your organization. As the intended audience is _all users of your own organization_, **Azure AD with a single tenant** (i.e. yours) is likely the best choice.
 
 ### Collaboration App
 
@@ -52,7 +52,7 @@ Now imagine you are building a platform for tracking expenses that _other_ organ
 
 You now have a choice to make:
 
-- You can define your target audience as _all organizations that have Azure AD_ today (i.e. have a total addressable market of over a billion users across millions of organizations). In this case you can easily create an **Azure AD B2E multi-tenant application** and join the [marketplace with thousands of other SaaS vendors](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/category/azure-active-directory-apps).
+- You can define your target audience as _all organizations that have Azure AD_ today (i.e. have a total addressable market of over a billion users across millions of organizations). In this case you can easily create an **Azure AD multi-tenant application** and join the [marketplace with thousands of other SaaS vendors](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/category/azure-active-directory-apps).
 - You can also choose to target any user or organization that does not necessarily have an Azure AD tenant. In that case, it depends on your business model if you want to allow anyone to sign up freely and try out your service, or if you want to restrict your users to only explicitly invited people. In both cases, you probably don't want to see these users as guests in your own Azure AD tenant. **Azure AD B2C** is well suited to handle this scenario, possibly with custom policies to restrict who can sign up for an account.
 - Finally as a combination of both previous methods, you can also use **Azure AD B2C** and configure it to [allow user sign-in for multi-tenant Azure AD tenants](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-commonaad-custom) - with or without the traditional support for self-service sign up and social identity providers.
 
@@ -70,16 +70,16 @@ Azure AD B2C provides a lot of additional flexibility when it comes to [federati
 
 The table below details which features are available in the different flavors of Azure AD (or which nuances there are between them), which can help the decision making.
 
-| Feature | AAD BE2 Single Tenant | AAD B2E Multi-Tenant | AAD B2B | AAD B2C |
+| Feature | Azure AD Single Tenant | Azure AD Multi-Tenant | Azure AD B2B | Azure AD B2C |
 | ----------- | --------------------- | -------------------- | ------- | ------- |
 | Is primarily intended for Line-Of-Business (LOB) applications | Yes | No | No | No |
 | Is primarily intended for Software-as-a-Service (SaaS) applications | No | Yes | No | No |
 | Is primarily intended for collaboration using Microsoft applications (O365, Teams, ...) | No | No | Yes | No |
 | Is primarily intended for transactional services using custom developed applications | No | No | No | Yes |
-| Supports AAD B2E users (from a single tenant) | Yes | Yes | Yes | Yes [1] |
-| Supports AAD B2E users (from multiple tenants) | No | Yes [2] | Yes [3] | Yes [4] |
-| Supports federation to business partners in existing AAD tenants | No | Yes | Yes | Yes |
-| Supports federation to (potentially many) business partners in non-existing AAD tenants (creating an ad-hoc "viral" tenant) | No | No [5] | Yes [6] | No [5] |
+| Supports Azure AD users (from a single tenant) | Yes | Yes | Yes | Yes [1] |
+| Supports Azure AD users (from multiple tenants) | No | Yes [2] | Yes [3] | Yes [4] |
+| Supports federation to business partners in existing Azure AD tenants | No | Yes | Yes | Yes |
+| Supports federation to (potentially many) business partners in non-existing Azure AD tenants (creating an ad-hoc "viral" tenant) | No | No [5] | Yes [6] | No [5] |
 | Supports federation to Microsoft Accounts | No | No | Yes | Yes |
 | Supports federation to Google Accounts | No | No | Yes [7] | Yes |
 | Supports federation to any SAML or WS-Federation Identity Provider | No | No | Yes [8] | Yes [9] |
@@ -88,7 +88,7 @@ The table below details which features are available in the different flavors of
 | Can *easily* handle delegated user management, where the external organization can manage their users that should have access to your application | No | Yes [11] | Yes [12] | No [13] |
 
 Notes:
-- [1]: [Set up the Azure AD B2E tenant as an Identity Provider using OpenID Connect](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-oidc-azure-active-directory).
+- [1]: [Set up the Azure AD tenant as an Identity Provider using OpenID Connect](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-oidc-azure-active-directory).
 - [2]: Develop your application using [the "common" endpoint](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-convert-app-to-be-multi-tenant#update-your-code-to-send-requests-to-common).
 - [3]: [Invite them as B2B guest users](https://docs.microsoft.com/en-us/azure/active-directory/b2b/add-users-administrator).
 - [4]: [Set up the other tenants as Identity Provider using OpenID Connect](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-oidc-azure-active-directory); optionally allow users from _any_ tenant using [the "common" endpoint](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-convert-app-to-be-multi-tenant#update-your-code-to-send-requests-to-common).
