@@ -31,7 +31,7 @@ Here are some additional considerations for a few of these decision points:
   - This may be exactly what you want in a situation where you trust these users to collaborate with your organization (e.g. business partners or vendors); it may also be something you explicitly want to avoid (e.g. to prevent someone from inadvertently or maliciously granting these guest users permissions to corporate resources or your Azure subscriptions).
   - Think of it this way: _would you invite these users into your physical office building?_ If so, then B2B guest user access may be a great choice.
 - _"Is creating a just-in-time (unmanaged) Azure AD tenant acceptable?"_
-  - This refers to the Azure AD capability where users can perform a [self-service signup in Azure AD](https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-self-service-signup) with their email address and an Azure AD tenant corresponding to their email domain will automatically and transparently be created for them behind the scenes (a so-called _just-in-time_ or _unmanaged_ directory, sometimes also referred to as a _viral_ tenant).
+  - This refers to the Azure AD capability where users can perform a [self-service signup in Azure AD](https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-self-service-signup) with their email address and an Azure AD tenant corresponding to their email domain will automatically and transparently be created for them behind the scenes (a so-called _unmanaged_ or _just-in-time_ directory, sometimes also referred to as a _viral_ tenant).
   - Note that customers can still [take control of this unmanaged directory](https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/domains-admin-takeover), but depending on your user base having this directory created for them may or may not be acceptable.
 
 ## Examples
@@ -79,7 +79,7 @@ The table below details which features are available in the different flavors of
 | Supports Azure AD users (from a single tenant) | Yes | Yes | Yes | Yes [1] |
 | Supports Azure AD users (from multiple tenants) | No | Yes [2] | Yes [3] | Yes [4] |
 | Supports federation to business partners in existing Azure AD tenants | No | Yes | Yes | Yes |
-| Supports federation to (potentially many) business partners in non-existing Azure AD tenants (creating an ad-hoc "viral" tenant) | No | No [5] | Yes [6] | No [5] |
+| Supports federation to (potentially many) business partners in non-existing Azure AD tenants (creating an ad-hoc "unmanaged" tenant) | No | No [5] | Yes [6] | No [5] |
 | Supports federation to Microsoft Accounts | No | No | Yes | Yes |
 | Supports federation to Google Accounts | No | No | Yes [7] | Yes |
 | Supports federation to any SAML or WS-Federation Identity Provider | No | No | Yes [8] | Yes [9] |
@@ -93,11 +93,11 @@ Notes:
 - [3]: [Invite them as B2B guest users](https://docs.microsoft.com/en-us/azure/active-directory/b2b/add-users-administrator).
 - [4]: [Set up the other tenants as Identity Provider using OpenID Connect](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-oidc-azure-active-directory); optionally allow users from _any_ tenant using [the "common" endpoint](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-convert-app-to-be-multi-tenant#update-your-code-to-send-requests-to-common).
 - [5]: The Azure AD tenants must already exist.
-- [6]: Note that you can even automate the creation of users and viral tenants.
-- [7]: See [Google Federation in B2B](https://docs.microsoft.com/en-us/azure/active-directory/b2b/google-federation).
-- [8]: B2B is ["Soon to support direct federation"](https://docs.microsoft.com/en-us/azure/active-directory/b2b/compare-with-b2c) using [SAML and WS-Federation](https://youtu.be/JN5u6w_gyic?t=521).
-- [9]: Using [Azure AD B2C custom policies](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-overview-custom).
-- [10]: B2B is soon to support using [One Time Passcodes](https://youtu.be/JN5u6w_gyic?t=560) with _any_ email address.
+- [6]: Note that you can even automate the creation of users and "unmanaged" tenants.
+- [7]: See [Google Federation in Azure AD B2B](https://docs.microsoft.com/en-us/azure/active-directory/b2b/google-federation).
+- [8]: Azure AD B2B is ["soon to support direct federation"](https://docs.microsoft.com/en-us/azure/active-directory/b2b/compare-with-b2c) using [SAML and WS-Federation](https://youtu.be/JN5u6w_gyic?t=521).
+- [9]: This can be achieved by using [Azure AD B2C custom policies](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-overview-custom).
+- [10]: Azure AD B2B is soon to support using [One Time Passcodes](https://youtu.be/JN5u6w_gyic?t=560) with _any_ email address.
 - [11]: The external Azure AD tenants are managed by their respective owning organizations.
 - [12]: The B2B guest users are managed in their home tenants.
 - [13]: There is no additional user "grouping" for delegated user management; you have to build your own user management experience on top of Azure AD B2C using the Graph API.
