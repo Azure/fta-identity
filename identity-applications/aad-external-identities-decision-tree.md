@@ -20,19 +20,25 @@ In order to choose the right Azure AD flavor for your project, there are a numbe
 
 Here are some additional considerations for a few of these decision points:
 
-- _"Are users from any existing Azure AD tenant?"_ covers the scenario where all three of the following conditions are met:
-  - The users will be defined in Azure AD.
-  - Their Azure AD tenant already exists.
-  - You accept users to sign in from _any_ Azure AD tenant (in practice you can of course still reject users inside the application itself depending on the tenant that they signed in through, e.g. if you only want to allow users from specifically whitelisted tenants).
-- _"Is it acceptable to 'see' the users in your own Azure AD tenant (as guests)?"_
+- _"Should any user from any and all existing Azure AD tenants be able to sign in?"_ covers the scenario where all three of the following conditions are met:
+  - The users will be defined in a regular Azure AD tenant (not in Azure AD B2C) or have a personal Microsoft Account.
+  - The Azure AD tenants that contain the users already exist.
+  - You accept users to sign in from _any_ existing Azure AD tenant (in practice you can of course still reject users inside the application itself depending on the tenant that they signed in through, e.g. if you only want to allow users from specifically whitelisted tenants).
+- _"Do you prefer to 'see' the users in your own Azure AD tenant (as guests)?"_
   - This is an important decision factor to check if Azure AD B2B is suitable for your scenario because B2B users are represented as [guest users](https://docs.microsoft.com/en-us/azure/active-directory/b2b/user-properties) _inside your own Azure AD tenant_.
   - This has implications around trust and security, e.g. guest users can be browsed in your directory and granted permissions to your resources (e.g. SharePoint documents, Outlook calendars, PowerBI dashboards, even your Azure subscriptions).
   - Guest users are also able to get information about users in _your_ directory (which they are now a guest of), and depending on the [permissions you've granted these guest users](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions) they can also browse users and groups, see application definitions and more.
   - This may be exactly what you want in a situation where you trust these users to collaborate with your organization (e.g. business partners or vendors); it may also be something you explicitly want to avoid (e.g. to prevent someone from inadvertently or maliciously granting these guest users permissions to corporate resources or your Azure subscriptions).
   - Think of it this way: _would you invite these users into your physical office building?_ If so, then B2B guest user access may be a great choice.
+- _"Do you need extensive support for branding/customization?"_
+  - Azure AD (and by extension, Azure AD B2B) allow for [branding of the sign-in page](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/customize-branding), but this is more limited than what Azure AD B2C offers.
+  - For now, fully [customized user experiences](https://docs.microsoft.com/en-us/azure/active-directory-b2c/customize-ui-overview) can only be achieved in Azure AD B2C.
 - _"Is creating a just-in-time (unmanaged) Azure AD tenant acceptable?"_
   - This refers to the Azure AD capability where users can perform a [self-service signup in Azure AD](https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-self-service-signup) with their email address and an Azure AD tenant corresponding to their email domain will automatically and transparently be created for them behind the scenes (a so-called _unmanaged_ or _just-in-time_ directory, sometimes also referred to as a _viral_ tenant).
   - Note that customers can still [take control of this unmanaged directory](https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/domains-admin-takeover), but depending on your user base having this directory created for them may or may not be acceptable.
+
+> [!NOTE]
+> This decision tree is intended as a starting point to understand your options, but there can be others or even combinations of different options. For example, you can use Azure AD B2C and configure it to [allow user sign-in for multi-tenant Azure AD tenants](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-commonaad-custom) - with or without the traditional support for self-service sign up and social identity providers.
 
 ## Examples
 
@@ -46,7 +52,7 @@ Imagine in the previous example that you also work with external users (e.g. ven
 
 In this scenario, using **Azure AD B2B** is likely the best option. You can explicitly [invite the people you collaborate with](https://docs.microsoft.com/en-us/azure/active-directory/b2b/add-users-administrator) so they get added as guest users to your tenant, and you can give them access to the same applications that your own organization's users are using (including the expense application you've built yourself).
 
-### Software-as-a-Service (SaaS) App
+### Enterprise Software-as-a-Service (SaaS) App
 
 Now imagine you are building a platform for tracking expenses that _other_ organizations can use (e.g. through a subscription model for a monthly fee). In that case, you're not tracking expenses _for your own employees_, but providing a service that external organizations can onboard onto so that _their users_ can sign in to your application.
 
@@ -73,7 +79,7 @@ The table below details which features are available in the different flavors of
 | Feature | Azure AD Single Tenant | Azure AD Multi-Tenant | Azure AD B2B | Azure AD B2C |
 | ----------- | --------------------- | -------------------- | ------- | ------- |
 | Is primarily intended for Line-Of-Business (LOB) applications | Yes | No | No | No |
-| Is primarily intended for Software-as-a-Service (SaaS) applications | No | Yes | No | No |
+| Is primarily intended for Enterprise Software-as-a-Service (SaaS) applications | No | Yes | No | No |
 | Is primarily intended for collaboration using Microsoft applications (O365, Teams, ...) | No | No | Yes | No |
 | Is primarily intended for transactional services using custom developed applications | No | No | No | Yes |
 | Supports Azure AD users (from a single tenant) | Yes | Yes | Yes | Yes [1] |
