@@ -37,8 +37,7 @@ Here are some additional considerations for a few of these decision points:
   - This refers to the Azure AD capability where users can perform a [self-service signup in Azure AD](https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-self-service-signup) with their email address and an Azure AD tenant corresponding to their email domain will automatically and transparently be created for them behind the scenes (a so-called _unmanaged_ or _just-in-time_ directory, sometimes also referred to as a _viral_ tenant).
   - Note that customers can still [take control of this unmanaged directory](https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/domains-admin-takeover), but depending on your user base having this directory created for them may or may not be acceptable.
 
-> [!NOTE]
-> This decision tree is intended as a starting point to understand your options, but there can be others or even combinations of different options. For example, you can use Azure AD B2C and configure it to [allow user sign-in for multi-tenant Azure AD tenants](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-commonaad-custom) - with or without the traditional support for self-service sign up and social identity providers.
+> **NOTE**: This decision tree is intended as a starting point to understand your options, but there can be others or even combinations of different options. For example, you can use Azure AD B2C and configure it to [allow user sign-in for multi-tenant Azure AD tenants](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-commonaad-custom) - with or without the traditional support for self-service sign up and social identity providers.
 
 ## Examples
 
