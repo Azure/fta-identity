@@ -16,8 +16,8 @@ In this scenario there are two parties at play:
 
 ### Register all parties in Azure Active Directory
 
-- **register apps**: each of the parties needs to be represented in Azure Active Directory [by _registering_ them](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app).
-- **assign client creds**: when each registration has been done, make sure to assign client credentials to the daemon application which it can later use to proof its identity towards AAD.
+- **register apps**: the API needs to be represented in Azure Active Directory [by _registering_ it](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app). The daemon can either be assigned a managed identity or registered in the same way.
+- **assign client creds**: if the daemon application is registered (i.e. not using a managed identity), make sure to assign client credentials to the daemon application which it can later use to proof its identity towards AAD. If it uses a managed identity, this step is not necessary.
 - **advertise role on API**: now, modify the registration manifest for the API, to [advertise at least one role](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps).
 
 For example, we could add two roles to our manifest: one that allows reading and one that allows writing:
@@ -47,7 +47,7 @@ For example, we could add two roles to our manifest: one that allows reading and
 ]
 ~~~
 
-(_Note that these `id` values must be newley generated GUIDs to guarantee uniqueness._)
+(_Note that these `id` values must be newly generated GUIDs to guarantee uniqueness._)
 
 At this point, technically, the daemon app can request a token for accessing the API.  In that token, the role would not show up as the daemon was not assigned to the role yet.  This also goes for _any other app_ in your Azure Active Directory tenant: when your application registration has not been locked down by setting the "User Assignment Required?" flag to "Yes" within the properties of the corresponding Service Principal, then anyone (user or application) is able to fetch a token with the API as the audience.  
 
@@ -62,13 +62,53 @@ There are two ways to prevent this from happening, which can be combined if desi
 
 To prevent any random application or user from requesting a token towards the web API, we configured the web API registration manifest to advertise a role.  Now, we still need to make sure our daemon app requests access to the web API under this role _and_ is granted that request by an administrator.
 
+#### If the daemon app is using a managed identity
+
+The Azure portal does not currently support assigning application roles to managed identities, so you need to use other tooling. For example, you can use PowerShell to achieve this:
+
+- Log into Azure AD using a global administrator account:
+
+    ```powershell
+    Connect-AzureAD # Connect as a global admin
+    ```
+
+- Find the AD object IDs for the service principals associated with the two applications:
+
+    ```powershell
+    $apiApplicationDisplayName = 'MyApi' # this is the display name you gave the API application when you created its app registration
+    $daemonApplicationDisplayName = 'mydaemonapp' # this is the name of the managed identity, which will be the same as the App Service app name
+    $apiServicePrincipalObjectId = (Get-AzureADServicePrincipal -Filter "DisplayName eq '$apiApplicationDisplayName'").ObjectId
+    $daemonServicePrincipalObjectId = (Get-AzureADServicePrincipal -Filter "DisplayName eq '$daemonApplicationDisplayName'").ObjectId
+    ```
+
+- Specify the role you want to grant:
+
+    ```powershell
+    $roleId = '751d2252-59ce-4c8a-ac83-3c5246428fd4' # this is the ID for the role that you created above - in this example we are assigning the read-only role
+    ```
+
+- Assign the role:
+
+    ```powershell
+    New-AzureADServiceAppRoleAssignment -ObjectId $clientServicePrincipalObjectId -Id $roleId -PrincipalId $clientServicePrincipalObjectId -ResourceId $serverServicePrincipalObjectId
+    ```
+
+
+#### If the daemon app has been registered in Azure AD
+
+If the daemon app is not using a managed identity, you can assign the application role using the Azure portal.
+
 - Request access to the role: go to the daemon application registration and open the "API permissions" blade where you can [Add permissions to access web API](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-configure-app-access-web-apis#add-permissions-to-access-web-apis).  You'll find both application roles back as an "Application Permission" which can be requested by the daemon.  (This is different from "delegated permissions" which are permissions which you'd grant the application on behalf of a user.  In this scenario, using a client-credential flow, there is no user, only an application.)
 - Grant admin consent on each application: you'll need to be global admin in order to do so.  (Also see [permission types](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#permission-types) and note how "Application Permissions" need to be consented by an admin given that there is no user to provide the consent instead.)
 
 
 ### Request a token from the daemon to access the web API
 
-The daemon app will need to have a token to talk to the web API, which will come from Azure Active Directory.  OAuth2 allows for different flows to fetch such token and in this scenario we'll need to use a "client credential flow".  
+The daemon app will need to have a token to talk to the web API, which will come from Azure Active Directory.
+
+If the daemon app is using a managed identity, it can use a special HTTP endpoint or SDK support to obtain a token, [as described in the App Service documentation](https://docs.microsoft.com/en-us/azure/app-service/overview-managed-identity?tabs=dotnet#obtaining-tokens-for-azure-resources).
+
+If the daemon app is registered in Azure AD, it will need to obtain a token from Azure AD. OAuth2 allows for different flows to fetch such token and in this scenario we'll need to use a "client credential flow".  
 
 There is a [documented .NET Core 2.1 sample on how to  this](https://github.com/Azure-Samples/active-directory-dotnetcore-daemon-v2) on GitHub:
 - [Line 68](https://github.com/Azure-Samples/active-directory-dotnetcore-daemon-v2/blob/9d4596586571d93922aa3c26a846653bb7ce1d7e/daemon-console/Program.cs#L68) uses the client credentials to construct an MSAL app
