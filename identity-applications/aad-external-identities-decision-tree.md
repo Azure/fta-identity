@@ -100,7 +100,7 @@ Notes:
 - [5]: The Azure AD tenants must already exist.
 - [6]: Note that you can even automate the creation of users and "unmanaged" tenants.
 - [7]: See [Google Federation in Azure AD B2B](https://docs.microsoft.com/en-us/azure/active-directory/b2b/google-federation).
-- [8]: Azure AD B2B is ["soon to support direct federation"](https://docs.microsoft.com/en-us/azure/active-directory/b2b/compare-with-b2c) using [SAML and WS-Federation](https://youtu.be/JN5u6w_gyic?t=521).
+- [8]: Azure AD B2B supports [direct federation](https://docs.microsoft.com/en-us/azure/active-directory/b2b/direct-federation) using SAML and WS-Federation.
 - [9]: This can be achieved by using [Azure AD B2C custom policies](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-overview-custom).
 - [10]: Azure AD B2B is soon to support using [One Time Passcodes](https://youtu.be/JN5u6w_gyic?t=560) with _any_ email address.
 - [11]: The external Azure AD tenants are managed by their respective owning organizations.
