@@ -4,3 +4,4 @@ See our [FastTrack for Azure landing page](https://github.com/Azure/FastTrackFor
 
 # Identity for Organizations
 
+* [Azure AD and the relation to Azure Subscriptions, O365 and Enterprise Agreement](aad-relation-to-ea.md)
