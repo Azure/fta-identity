@@ -95,9 +95,11 @@ The table below details which features are available in the different flavors of
 | Supports federation to Microsoft Accounts                                                                                                         | No                    | Yes          | Yes          |
 | Supports federation to Gmail Accounts                                                                                                             | No                    | Yes [7]      | Yes          |
 | Supports federation to any SAML 2.0 or WS-Federation Identity Provider                                                                            | No                    | Yes [8]      | Yes [9]      |
-| Supports federation to other social accounts (Facebook, Twitter etc)                                                                              | No                    | Yes [10]     | Yes          |
+| Supports federation to other social accounts (Facebook, Twitter etc) or any email address                                                         | No                    | Yes [10]     | Yes          |
+| Supports self-service user sign-up                                                                                                                | No                    | Yes [11]     | Yes          |
+| Supports custom logic during user sign-up or sign-in                                                                                              | No                    | Yes [12]     | Yes [13]     |
 | Can *easily* pre-approve/invite users                                                                                                             | No                    | Yes [3]      | No [9]       |
-| Can *easily* handle delegated user management, where the external organization can manage their users that should have access to your application | Yes [11]              | Yes [12]     | No [13]      |
+| Can *easily* handle delegated user management, where the external organization can manage their users that should have access to your application | Yes [14]              | Yes [15]     | No [16]      |
 
 Notes:
 
@@ -110,7 +112,10 @@ Notes:
 - [7]: See [Google Federation in Azure AD B2B](https://docs.microsoft.com/azure/active-directory/b2b/google-federation).
 - [8]: Azure AD B2B supports [direct federation](https://docs.microsoft.com/azure/active-directory/b2b/direct-federation) using SAML 2.0 and WS-Federation.
 - [9]: This can be achieved by using [Azure AD B2C custom policies](https://docs.microsoft.com/azure/active-directory-b2c/active-directory-b2c-overview-custom).
-- [10]: Azure AD B2B is soon to support using [One-Time Passcodes](https://docs.microsoft.com/azure/active-directory/b2b/one-time-passcode) with _any_ email address.
-- [11]: The external Azure AD tenants are managed by their respective owning organizations.
-- [12]: The B2B guest users are managed in their home tenants.
-- [13]: There is no additional user "grouping" for delegated user management; you have to build your own user management experience on top of Azure AD B2C using the Graph API.
+- [10]: Azure AD B2B supports using [email one-time passcode authentication](https://docs.microsoft.com/azure/active-directory/b2b/one-time-passcode) with _any_ email address.
+- [11]: Azure AD B2B supports [self-service sign-up user flows](https://docs.microsoft.com/azure/active-directory/external-identities/self-service-sign-up-overview).
+- [12]: Azure AD B2B supports [API connectors](https://docs.microsoft.com/azure/active-directory/external-identities/api-connectors-overview).
+- [13]: Azure AD B2C supports [API connectors](https://docs.microsoft.com/azure/active-directory-b2c/api-connectors-overview).
+- [14]: The external Azure AD tenants are managed by their respective owning organizations.
+- [15]: The B2B guest users are managed in their home tenants.
+- [16]: There is no additional user "grouping" for delegated user management; you have to build your own user management experience on top of Azure AD B2C using the Graph API; see the [Delegated User Management sample](https://github.com/azure-ad-b2c/api-connector-samples/tree/main/InvitationCodeDelegatedUserManagement) for an implementation of such a pattern.
