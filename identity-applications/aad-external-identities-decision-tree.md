@@ -23,7 +23,7 @@ Here are some additional considerations for a few of these decision points:
 - _"Should any user from any and all existing Azure AD tenants be able to sign in?"_ covers the scenario where all three of the following conditions are met:
   - The users will be defined in a regular Azure AD tenant (not in Azure AD B2C) or have a personal Microsoft Account.
   - The Azure AD tenants that contain the users already exist.
-  - You accept users to sign in from _any_ existing Azure AD tenant (in practice you can of course still reject users inside the application itself depending on the tenant that they signed in through, e.g. if you only want to allow users from specifically whitelisted tenants).
+  - You accept users to sign in from _any_ existing Azure AD tenant (in practice you can of course still reject users inside the application itself depending on the tenant that they signed in through, e.g. if you only want to allow users from specifically allowed tenants).
 - _"Do you prefer to 'see' the users in your own Azure AD tenant (as guests)?"_
   - This is an important decision factor to check if Azure AD B2B is suitable for your scenario because B2B users are represented as [guest users](https://docs.microsoft.com/azure/active-directory/b2b/user-properties) _inside your own Azure AD tenant_.
   - This has implications around trust and security, e.g. guest users can be browsed in your directory and granted permissions to your resources (e.g. SharePoint documents, Outlook calendars, PowerBI dashboards, even your Azure subscriptions).
