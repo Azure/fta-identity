@@ -1,3 +1,6 @@
+# IMPORTANT
+
+With the disbanding of the FTA program at Microsoft, this repo is being archived and will no longer be maintained.
 
 # Contributing
 
